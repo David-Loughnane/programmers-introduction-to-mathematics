@@ -1,23 +1,15 @@
 from __future__ import annotations
-from typing import List, Iterator
+from typing import Sequence, Iterator
 from itertools import zip_longest
 
 
-def strip(L: List[int], elt: int) -> List[int]:
-    """Strip all copies of elt from the end of the list.
-
-    Arguments:
-        L: a list (an indexable, sliceable object)
-        elt: the object to be removed
-
-    Returns:
-        a slice of L with all copies of elt removed from the end.
-    """
+def strip_zeros(L: Sequence[float]) -> Sequence[float]:
+    """Strip all zeros from the end of the list."""
     if len(L) == 0:
         return L
 
     i = len(L) - 1
-    while i >= 0 and L[i] == elt:
+    while i >= 0 and L[i] == 0:
         i -= 1
 
     return L[: i + 1]
@@ -33,18 +25,18 @@ class Polynomial:
     Polynomials override the basic arithmetic operations.
     """
 
-    def __init__(self, coefficients: List[int]) -> None:
+    def __init__(self, coefficients: Sequence[float]) -> None:
         """Create a new polynomial.
 
         The caller must provide a list of all coefficients of the
         polynomial, even those that are zero. E.g.,
         Polynomial([0, 1, 0, 2]) corresponds to f(x) = x + 2x^3.
         """
-        self.coefficients = strip(coefficients, 0)
+        self.coefficients = strip_zeros(coefficients)
         self.indeterminate = "x"
 
     def add(self, other: Polynomial) -> Polynomial:
-        newCoefficients = [sum(x) for x in zip_longest(self, other, fillvalue=0.)]
+        newCoefficients = [sum(x) for x in zip_longest(self, other, fillvalue=0)]
         return Polynomial(newCoefficients)
 
     def __add__(self, other: Polynomial) -> Polynomial:
@@ -57,7 +49,7 @@ class Polynomial:
             for j, b in enumerate(other):
                 newCoeffs[i + j] += a * b
 
-        return Polynomial(strip(newCoeffs, 0))
+        return Polynomial(strip_zeros(newCoeffs))
 
     def __mul__(self, other: Polynomial) -> Polynomial:
         return self.multiply(other)
@@ -74,18 +66,16 @@ class Polynomial:
             ]
         )
 
-    def evaluateAt(self, x: int) -> int:
+    def evaluateAt(self, x: float) -> float:
         """Evaluate a polynomial at an input point.
 
         Uses Horner's method, first discovered by Persian mathematician
         Sharaf al-Dīn al-Ṭūsī, which evaluates a polynomial by minimizing
         the number of multiplications.
         """
-        theSum = 0
-
+        theSum = 0.0
         for c in reversed(self.coefficients):
             theSum = theSum * x + c
-
         return theSum
 
     def __iter__(self) -> Iterator:
@@ -97,7 +87,7 @@ class Polynomial:
     def __sub__(self, other: Polynomial) -> Polynomial:
         return self + (-other)
 
-    def __call__(self, *args) -> int:
+    def __call__(self, *args) -> float:
         return self.evaluateAt(args[0])
 
 
