@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Sequence, Iterator
+from typing import Sequence, Iterator
 from itertools import zip_longest
 
 
