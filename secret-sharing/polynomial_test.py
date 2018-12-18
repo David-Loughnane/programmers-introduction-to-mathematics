@@ -1,5 +1,4 @@
-from polynomial import strip_zeros
-from polynomial import Polynomial
+from polynomial import strip_zeros, Polynomial
 
 
 def test_strip_empty():

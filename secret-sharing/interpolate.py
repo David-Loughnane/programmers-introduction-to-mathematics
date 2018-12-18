@@ -1,15 +1,10 @@
-from polynomial import Polynomial
-from polynomial import ZERO
+from polynomial import Polynomial, ZERO
+from typing import Sequence, Tuple
 
 
-def single_term(points, i):
-    """Return one term of an interpolated polynomial.
-
-    Arguments:
-      - points: a list of (float, float)
-      - i: an integer indexing a specific point
-    """
-    theTerm = Polynomial([1.])
+def single_term(points: Sequence[Tuple[float, float]], i: int) -> Polynomial:
+    """Return one term of an interpolated polynomial."""
+    theTerm = Polynomial([1.0])
     xi, yi = points[i]
 
     for j, p in enumerate(points):
@@ -22,7 +17,7 @@ def single_term(points, i):
     return theTerm * Polynomial([yi])
 
 
-def interpolate(points):
+def interpolate(points: Sequence[Tuple[float, float]]) -> Polynomial:
     """Return the unique degree n polynomial passing through the given n+1 points."""
     if len(points) == 0:
         raise ValueError('Must provide at least one point.')
